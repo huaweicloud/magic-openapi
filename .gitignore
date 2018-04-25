@@ -1,0 +1,5 @@
+*.swp
+
+# IDEA files
+.idea/*
+*.iml
