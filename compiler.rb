@@ -53,6 +53,7 @@ raise "Output '#{output}' is not a directory" unless Dir.exist?(output)
 
 openapi = OpenApiParser::Specification.resolve(File.join(catalog, 'api.yaml'))
 
-template = 'templates/compute/api.erb'
+temp = catalog.sub('services', 'templates')
+template = File.join(temp, 'api.erb')
 compiler = Compiler.new(openapi, template, uris)
 compiler.generate output
