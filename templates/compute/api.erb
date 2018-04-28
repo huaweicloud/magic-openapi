@@ -1,0 +1,10 @@
+--- !ruby/object:Api::Product
+name: Compute(Nova)
+prefix: huawei_compute
+base_url: https://host.huawei.com/compute/v1/
+scopes:
+  - https://host.huawei.com/compute
+objects:
+<% apis.each do |api| -%>
+<%= lines(build_object_property(api)) -%>
+<% end -%>

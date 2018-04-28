@@ -1,0 +1,26 @@
+<%
+  api_type = Hash[
+    "string" => "- !ruby/object:Api::Type::String",
+    "boolean" => "- !ruby/object:Api::Type::Boolean",
+    "integer" => "- !ruby/object:Api::Type::Integer",
+  ]
+-%>
+
+- !ruby/object:Api::Resource
+    name: '<%= resource_name %>'
+    kind: 'compute#<%= resource_name.downcase %>'
+    base_url: <%= base_url %>
+    description: '<%= description %>'
+<%%= indent(compile_file({}, 'templates/global_async.yaml.erb'), 4) %>
+    properties:
+<% properties.each do |key, value| -%>
+      <%= api_type[value['type']] %>
+      name: '<%= key -%>',
+      description: '<%= value['description'] -%>',
+<% if required.include? key -%>
+      required: true,
+<% end -%>
+<% if output.include? key -%>
+      output: true
+<% end -%>
+<% end -%>

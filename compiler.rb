@@ -24,11 +24,15 @@ require 'optparse'
 catalog = nil
 output = nil
 
+uris = [
+  '/os-keypairs',
+]
+
 ARGV << '-h' if ARGV.empty?
 
 OptionParser.new do |opt|
-  opt.on('-p', '--product PRODUCT', 'Folder with product catalog') do |p|
-    catalog = p
+  opt.on('-s', '--service SERVICE', 'Folder with service catalog') do |s|
+    catalog = s
   end
   opt.on('-o', '--output OUTPUT', 'Folder for api output') do |o|
     output = o
@@ -39,18 +43,16 @@ OptionParser.new do |opt|
   end
 end.parse!
 
-raise 'Option -p/--product is a required parameter' if catalog.nil?
+raise 'Option -s/--service is a required parameter' if catalog.nil?
 raise 'Option -o/--output is a required parameter' if output.nil?
 
-raise "Product '#{catalog}' does not have api.yaml" \
+raise "Service '#{catalog}' does not have api.yaml" \
   unless File.exist?(File.join(catalog, 'api.yaml'))
 
 raise "Output '#{output}' is not a directory" unless Dir.exist?(output)
 
-api = OpenApiParser::Specification.resolve(File.join(catalog, 'api.yaml'))
-#endpoint = api.endpoint('/os-keypairs', 'post')
-#p endpoint.body_schema
+openapi = OpenApiParser::Specification.resolve(File.join(catalog, 'api.yaml'))
 
-template = 'templates/api.erb'
-compiler = Compiler.new(api, template)
+template = 'templates/compute/api.erb'
+compiler = Compiler.new(openapi, template, uris)
 compiler.generate output
