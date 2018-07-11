@@ -191,14 +191,6 @@ definitions:
       user_id:
         type: string
         description: "The user_id of the keypair."
-      test_param:
-        type: string
-        description: "Test param."
-      test_param_array:
-        type: array
-        description: "Test param array."
-        items:
-          $ref: '#/definitions/array_info'
   keypair(response):
     type: object
     x-resource: Keypairs
@@ -221,18 +213,3 @@ definitions:
       user_id:
         type: string
         description: "The user_id of the keypair."
-      test_array:
-        type: array
-        description: "array testing"
-        items:
-          $ref: '#/definitions/array_info'
-  array_info:
-    type: object
-    x-resource: Keypairs
-    properties:
-      array_a:
-        type: string
-        description: "array_a of test_array"
-      array_b:
-        type: string
-        description: "array_b of test_array"

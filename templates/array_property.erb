@@ -1,0 +1,15 @@
+<%
+  array_type = Hash[
+    "string" => "- !ruby/object:Api::Type::String",
+    "object" => "- !ruby/object:Api::Type::NestedObject",
+  ]
+-%>
+      item_type: <%= array_type[items['type']] %>
+<% if items['type'] == 'object' -%>
+	properties:
+<% items['properties'].each do |key, value| -%>
+          <%= array_type[value['type']] %>
+          name: '<%= key -%>',
+          description: '<%= value['description'] -%>',
+<% end -%>
+<% end -%>

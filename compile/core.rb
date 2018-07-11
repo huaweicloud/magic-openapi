@@ -55,11 +55,19 @@ class Compiler
     compile_template(
       'templates/property.erb',
       properties: object.get_properties,
+      parameters: object.get_parameters,
       required: object.get_required,
       output: object.get_output,
       resource_name: object.get_resource_name,
       description: object.get_description,
       base_url: object.uri
+    )
+  end
+
+  def build_array_property(items)
+    compile_template(
+      'templates/array_property.erb',
+      items: items,
     )
   end
 

@@ -55,7 +55,25 @@ class Api
   def get_output
     req_body = @endpoint.body_schema
     resp_body = @endpoint.response_body_schema(200)
-    resp_body['properties'].keys - req_body['properties'].keys
+    output = []
+    resp_body['properties'].each do |key, value|
+      if not req_body['properties'].include?(key)
+        output.push(key)
+      end
+    end
+    output
+  end
+
+  def get_parameters
+    req_body = @endpoint.body_schema
+    resp_body = @endpoint.response_body_schema(200)
+    parameters = Hash.new
+    req_body['properties'].each do |key, value|
+      if not resp_body['properties'].include?(key)
+        parameters[key] = value
+      end
+    end
+    parameters
   end
 
 end

@@ -6,14 +6,28 @@
     "array" => "- !ruby/object:Api::Type::Array",
   ]
 -%>
-
 - !ruby/object:Api::Resource
     name: '<%= resource_name %>'
     kind: 'compute#<%= resource_name.downcase %>'
     base_url: <%= base_url %>
     description: '<%= description %>'
-<%%= indent(compile_file({}, 'templates/global_async.yaml.erb'), 4) %>
+<% if not parameters.empty? -%>
+    parameters:
+<% end -%>
+<% parameters.each do |key, value| -%>
+      <%= api_type[value['type']] %>
+      name: '<%= key -%>',
+      description: '<%= value['description'] -%>',
+<% if required.include? key -%>
+      required: true,
+<% end -%>
+<% if value['type'] == 'array' -%>
+<%= lines(build_array_property(value['items'])) -%>
+<% end -%>
+<% end -%>
+<% if not parameters.empty? -%>
     properties:
+<% end -%>
 <% properties.each do |key, value| -%>
       <%= api_type[value['type']] %>
       name: '<%= key -%>',
@@ -23,5 +37,8 @@
 <% end -%>
 <% if output.include? key -%>
       output: true
+<% end -%>
+<% if value['type'] == 'array' -%>
+<%= lines(build_array_property(value['items'])) -%>
 <% end -%>
 <% end -%>
