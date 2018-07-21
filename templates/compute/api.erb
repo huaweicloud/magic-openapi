@@ -6,5 +6,5 @@ scopes:
   - https://host.huawei.com/compute
 objects:
 <% apis.each do |api| -%>
-<%= lines(build_object_property(api)) -%>
+<%= lines(build_object_resource(api)) -%>
 <% end -%>

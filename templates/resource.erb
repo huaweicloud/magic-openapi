@@ -1,0 +1,13 @@
+- !ruby/object:Api::Resource
+    name: '<%= resource_name %>'
+    kind: 'compute#<%= resource_name.downcase %>'
+    base_url: <%= base_url %>
+    description: '<%= description %>'
+<% if not parameters.empty? -%>
+    parameters:
+<%= lines(build_object_property(properties, required, output)) -%>
+<% end -%>
+<% if not properties.empty? -%>
+    properties:
+<%= lines(build_object_property(properties, required, output)) -%>
+<% end -%>

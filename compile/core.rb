@@ -51,9 +51,9 @@ class Compiler
     compile_file(ctx, template_file).join("\n")
   end
 
-  def build_object_property(object)
+  def build_object_resource(object)
     compile_template(
-      'templates/property.erb',
+      'templates/resource.erb',
       properties: object.get_properties,
       parameters: object.get_parameters,
       required: object.get_required,
@@ -61,6 +61,15 @@ class Compiler
       resource_name: object.get_resource_name,
       description: object.get_description,
       base_url: object.uri
+    )
+  end
+
+  def build_object_property(props, required, output)
+    compile_template(
+      'templates/property.erb',
+      props: props,
+      required: required,
+      output: output,
     )
   end
 
