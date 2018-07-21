@@ -64,10 +64,10 @@ class Compiler
     )
   end
 
-  def build_array_property(items)
+  def build_nested_object_property(props)
     compile_template(
-      'templates/array_property.erb',
-      items: items,
+      'templates/nested_property.erb',
+      props: props,
     )
   end
 
