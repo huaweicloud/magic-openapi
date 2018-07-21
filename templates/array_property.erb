@@ -1,4 +1,9 @@
 <%
+  data_type = Hash[
+    "string" => "- !ruby/object:Api::Type::String",
+    "boolean" => "- !ruby/object:Api::Type::Boolean",
+    "integer" => "- !ruby/object:Api::Type::Integer",
+  ]
   array_type = Hash[
     "string" => "- !ruby/object:Api::Type::String",
     "object" => "- !ruby/object:Api::Type::NestedObject",
@@ -8,7 +13,7 @@
 <% if items['type'] == 'object' -%>
 	properties:
 <% items['properties'].each do |key, value| -%>
-          <%= array_type[value['type']] %>
+          <%= data_type[value['type']] %>
           name: '<%= key %>'
           description: '<%= value['description'] %>'
 <% end -%>

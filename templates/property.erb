@@ -1,5 +1,5 @@
 <%
-  api_type = Hash[
+  data_type = Hash[
     "string" => "- !ruby/object:Api::Type::String",
     "boolean" => "- !ruby/object:Api::Type::Boolean",
     "integer" => "- !ruby/object:Api::Type::Integer",
@@ -24,7 +24,7 @@
 <% if value['title'] == 'Dict' -%>
       - !ruby/object:Api::Type::NameValues
 <% else -%>
-      <%= api_type[value['type']] %>
+      <%= data_type[value['type']] %>
 <% end -%>
       name: '<%= key %>'
       description: '<%= value['description'] %>'
@@ -50,7 +50,7 @@
 <% if value['title'] == 'Dict' -%>
       - !ruby/object:Api::Type::NameValues
 <% else -%>
-      <%= api_type[value['type']] %>
+      <%= data_type[value['type']] %>
 <% end -%>
       name: '<%= key %>'
       description: '<%= value['description'] %>'
