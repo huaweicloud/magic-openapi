@@ -44,6 +44,9 @@
       value_type: <%= dict_type["string"] %>
 <% end -%>
 <% end -%>
+<% if value['type'] == 'object' and not value['properties'].nil? -%>
+<%= lines(build_nested_object_property(value['properties'])) -%>
+<% end -%>
 <% if value['type'] == 'array' -%>
 <%
   itype = value['items']['type']
@@ -79,6 +82,9 @@
 <% else -%>
       value_type: <%= dict_type["string"] %>
 <% end -%>
+<% end -%>
+<% if value['type'] == 'object' and not value['properties'].nil? -%>
+<%= lines(build_nested_object_property(value['properties'])) -%>
 <% end -%>
 <% if value['type'] == 'array' -%>
 <%

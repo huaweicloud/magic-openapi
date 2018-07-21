@@ -205,6 +205,16 @@ definitions:
         description: "Test param array."
         items:
           $ref: '#/definitions/array_info'
+      scheduler_hints:
+        type: object
+        description: "Scheduler hints."
+        properties:
+          same_host:
+            type: string
+            description: "Same host."
+          different_host:
+            type: string
+            description: "Different host."
   keypair(response):
     type: object
     x-resource: Keypairs
