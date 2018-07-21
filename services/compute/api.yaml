@@ -191,6 +191,12 @@ definitions:
       user_id:
         type: string
         description: "The user_id of the keypair."
+      metadata:
+        type: object
+        title: Dict
+        description: "Metadata key and value pairs."
+        additionalProperties:
+          type: string
       test_param:
         type: string
         description: "Test param."
@@ -221,6 +227,12 @@ definitions:
       user_id:
         type: string
         description: "The user_id of the keypair."
+      metadata:
+        type: object
+        title: Dict
+        description: "Metadata key and value pairs."
+        additionalProperties:
+          type: string
       test_array:
         type: array
         description: "array testing"

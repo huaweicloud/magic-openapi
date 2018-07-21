@@ -5,6 +5,12 @@
     "integer" => "- !ruby/object:Api::Type::Integer",
     "array" => "- !ruby/object:Api::Type::Array",
   ]
+  dict_type = Hash[
+    "string" => "Api::Type::String",
+    "boolean" => "Api::Type::Boolean",
+    "integer" => "Api::Type::Integer",
+    "array" => "Api::Type::Array",
+  ]
 -%>
 - !ruby/object:Api::Resource
     name: '<%= resource_name %>'
@@ -15,28 +21,52 @@
     parameters:
 <% end -%>
 <% parameters.each do |key, value| -%>
+<% if value['title'] == 'Dict' -%>
+      - !ruby/object:Api::Type::NameValues
+<% else -%>
       <%= api_type[value['type']] %>
-      name: '<%= key -%>',
-      description: '<%= value['description'] -%>',
+<% end -%>
+      name: '<%= key %>'
+      description: '<%= value['description'] %>'
 <% if required.include? key -%>
-      required: true,
+      required: true
+<% end -%>
+<% if value['title'] == 'Dict' -%>
+      key_type: <%= dict_type["string"] %>
+<% if value['additionalProperties'] -%>
+      value_type: <%= dict_type[value['additionalProperties']['type']] %>
+<% else -%>
+      value_type: <%= dict_type["string"] %>
+<% end -%>
 <% end -%>
 <% if value['type'] == 'array' -%>
 <%= lines(build_array_property(value['items'])) -%>
 <% end -%>
 <% end -%>
-<% if not parameters.empty? -%>
+<% if not properties.empty? -%>
     properties:
 <% end -%>
 <% properties.each do |key, value| -%>
+<% if value['title'] == 'Dict' -%>
+      - !ruby/object:Api::Type::NameValues
+<% else -%>
       <%= api_type[value['type']] %>
-      name: '<%= key -%>',
-      description: '<%= value['description'] -%>',
+<% end -%>
+      name: '<%= key %>'
+      description: '<%= value['description'] %>'
 <% if required.include? key -%>
-      required: true,
+      required: true
 <% end -%>
 <% if output.include? key -%>
       output: true
+<% end -%>
+<% if value['title'] == 'Dict' -%>
+      key_type: <%= dict_type["string"] %>
+<% if value['additionalProperties'] -%>
+      value_type: <%= dict_type[value['additionalProperties']['type']] %>
+<% else -%>
+      value_type: <%= dict_type["string"] %>
+<% end -%>
 <% end -%>
 <% if value['type'] == 'array' -%>
 <%= lines(build_array_property(value['items'])) -%>

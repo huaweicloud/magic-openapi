@@ -9,7 +9,7 @@
 	properties:
 <% items['properties'].each do |key, value| -%>
           <%= array_type[value['type']] %>
-          name: '<%= key -%>',
-          description: '<%= value['description'] -%>',
+          name: '<%= key %>'
+          description: '<%= value['description'] %>'
 <% end -%>
 <% end -%>
