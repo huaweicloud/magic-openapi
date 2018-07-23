@@ -25,8 +25,10 @@ class Compiler
   def get_apis
     apis = []
     @uris.each do |uri|
-      endpoint = @openapi.endpoint(uri, 'post')
-      apis.push(Api.new(endpoint, uri))
+      api = Hash.new
+      api['post'] = @openapi.endpoint(uri, 'post')
+      api['get'] = @openapi.endpoint(uri+'/1', 'get')
+      apis.push(Api.new(api, uri))
     end
     apis
   end

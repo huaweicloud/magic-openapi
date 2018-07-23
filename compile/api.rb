@@ -13,15 +13,15 @@
 class Api
   attr_reader :uri
 
-  def initialize(endpoint, uri)
-    @endpoint = endpoint
+  def initialize(api, uri)
+    @api = api
     # remove '\'
     uri[0] = ''
     @uri = uri
   end
 
   def get_resource_name
-    req_body = @endpoint.body_schema
+    req_body = @api['post'].body_schema
     if req_body.include? 'x-resource'
       req_body['x-resource']
     else
@@ -30,7 +30,7 @@ class Api
   end
 
   def get_description
-    raw = @endpoint.raw
+    raw = @api['post'].raw
     if raw.include? 'description'
       raw['description']
     else
@@ -39,12 +39,12 @@ class Api
   end
 
   def get_properties
-    resp_body = @endpoint.response_body_schema(200)
+    resp_body = @api['get'].response_body_schema(200)
     resp_body['properties']
   end
 
   def get_required
-    req_body = @endpoint.body_schema
+    req_body = @api['post'].body_schema
     if req_body.include? 'required'
       req_body['required']
     else
@@ -53,8 +53,8 @@ class Api
   end
 
   def get_output
-    req_body = @endpoint.body_schema
-    resp_body = @endpoint.response_body_schema(200)
+    req_body = @api['post'].body_schema
+    resp_body = @api['get'].response_body_schema(200)
     output = []
     resp_body['properties'].each do |key, value|
       if not req_body['properties'].include?(key)
@@ -65,8 +65,8 @@ class Api
   end
 
   def get_parameters
-    req_body = @endpoint.body_schema
-    resp_body = @endpoint.response_body_schema(200)
+    req_body = @api['post'].body_schema
+    resp_body = @api['get'].response_body_schema(200)
     parameters = Hash.new
     req_body['properties'].each do |key, value|
       if not resp_body['properties'].include?(key)

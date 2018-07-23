@@ -8,6 +8,6 @@
 	properties:
 <% props.each do |key, value| -%>
           <%= data_type[value['type']] %>
-          name: '<%= key %>'
-          description: '<%= value['description'] %>'
+            name: '<%= key %>'
+            description: '<%= value['description'] %>'
 <% end -%>

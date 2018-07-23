@@ -173,6 +173,9 @@ definitions:
       user_id:
         type: string
         description: "The user_id of the keypair."
+      detail_test:
+        type: string
+        description: "The detail test of keypair."
   keypair(request):
     type: object
     x-resource: Keypairs

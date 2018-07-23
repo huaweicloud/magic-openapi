@@ -23,20 +23,20 @@
 <% else -%>
       <%= data_type[value['type']] %>
 <% end -%>
-      name: '<%= key %>'
-      description: '<%= value['description'] %>'
+        name: '<%= key %>'
+        description: '<%= value['description'] %>'
 <% if required.include? key -%>
-      required: true
+        required: true
 <% end -%>
 <% if output.include? key -%>
-      output: true
+        output: true
 <% end -%>
 <% if value['title'] == 'Dict' -%>
-      key_type: <%= dict_type["string"] %>
+        key_type: <%= dict_type["string"] %>
 <% if value['additionalProperties'] -%>
-      value_type: <%= dict_type[value['additionalProperties']['type']] %>
+        value_type: <%= dict_type[value['additionalProperties']['type']] %>
 <% else -%>
-      value_type: <%= dict_type["string"] %>
+        value_type: <%= dict_type["string"] %>
 <% end -%>
 <% end -%>
 <% if value['type'] == 'object' and not value['properties'].nil? -%>
@@ -47,7 +47,7 @@
   itype = value['items']['type']
   props = value['items']['properties']
 -%>
-      item_type: <%= array_type[itype] %>
+        item_type: <%= array_type[itype] %>
 <% if itype == 'object' -%>
 <%= lines(build_nested_object_property(props)) -%>
 <% end -%>
