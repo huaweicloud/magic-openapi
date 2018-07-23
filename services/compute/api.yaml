@@ -137,6 +137,35 @@ paths:
           description: 'forbidden'
         "404":
           description: 'itemNotFound'
+    put:
+      tags:
+        - Keypairs
+      x-resource: 'Keypairs'
+      x-name: 'Update Keypair'
+      x-category: 18759a3b-73a5-427a-a7fd-e7aced3f2cbd
+      x-source: 1
+      x-scope: 1
+      x-constraint: 'Update Keypair.'
+      x-section: ''
+      description: 'Update Keypair.'
+      operationId: putKeypairs249_Update Keypair
+      parameters:
+        - name: keypair
+          in: body
+          description: 'A keypair object.'
+          schema:
+            $ref: '#/definitions/keypair(update)'
+      responses:
+        '200':
+          description: 'Keypair object.'
+          schema:
+            $ref: '#/definitions/keypair(detail)'
+        "401":
+          description: 'unauthorized'
+        "403":
+          description: 'forbidden'
+        "404":
+          description: 'itemNotFound'
 definitions:
   keypair:
     type: object
@@ -254,6 +283,33 @@ definitions:
       test_array:
         type: array
         description: "array testing"
+        items:
+          $ref: '#/definitions/array_info'
+  keypair(update):
+    type: object
+    x-resource: Keypairs
+    properties:
+      name:
+        type: string
+        description: "A name for the keypair which will be used to reference it later."
+      public_key:
+        type: string
+        description: "The keypair public key."
+      type:
+        type: string
+        description: "The type of the keypair. Allowed values are ssh or x509New in version 2.2"
+      user_id_update:
+        type: string
+        description: "The user_id of the keypair."
+      metadata:
+        type: object
+        title: Dict
+        description: "Metadata key and value pairs."
+        additionalProperties:
+          type: string
+      test_param_array:
+        type: array
+        description: "Test param array."
         items:
           $ref: '#/definitions/array_info'
   array_info:

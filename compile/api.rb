@@ -76,4 +76,30 @@ class Api
     parameters
   end
 
+  def get_create_update
+    create_body = @api['post'].body_schema
+    create_update = Hash.new
+    create_body['properties'].each do |key, value|
+      if @api['put'].nil?
+        create_update[key] = 'c'
+      else
+	update_body = @api['put'].body_schema
+        if not update_body['properties'].include?(key)
+          create_update[key] = 'c'
+        else
+          create_update[key] = 'cu'
+        end
+      end
+    end
+    if not @api['put'].nil?
+      update_body = @api['put'].body_schema
+      update_body['properties'].each do |key, value|
+        if not create_body['properties'].include?(key)
+          create_update[key] = 'u'
+        end
+      end
+    end
+    create_update
+  end
+
 end

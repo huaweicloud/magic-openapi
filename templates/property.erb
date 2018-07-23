@@ -31,6 +31,9 @@
 <% if output.include? key -%>
         output: true
 <% end -%>
+<% if cu.include? key -%>
+	create_update: '<%= cu[key] %>'
+<% end -%>
 <% if value['title'] == 'Dict' -%>
         key_type: <%= dict_type["string"] %>
 <% if not value['additionalProperties']['type'].nil? -%>

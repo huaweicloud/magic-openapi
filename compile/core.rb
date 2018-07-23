@@ -28,6 +28,7 @@ class Compiler
       api = Hash.new
       api['post'] = @openapi.endpoint(uri, 'post')
       api['get'] = @openapi.endpoint(uri+'/1', 'get')
+      api['put'] = @openapi.endpoint(uri+'/1', 'put')
       if not api['post'].nil? and not api['get'].nil?
         apis.push(Api.new(api, uri))
       end
@@ -62,18 +63,20 @@ class Compiler
       parameters: object.get_parameters,
       required: object.get_required,
       output: object.get_output,
+      cu: object.get_create_update,
       resource_name: object.get_resource_name,
       description: object.get_description,
       base_url: object.uri
     )
   end
 
-  def build_object_property(props, required, output)
+  def build_object_property(props, required, output, cu)
     compile_template(
       'templates/property.erb',
       props: props,
       required: required,
       output: output,
+      cu: cu
     )
   end
 

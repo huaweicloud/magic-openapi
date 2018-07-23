@@ -5,9 +5,9 @@
     description: '<%= description %>'
 <% if not parameters.empty? -%>
     parameters:
-<%= lines(build_object_property(parameters, required, output)) -%>
+<%= lines(build_object_property(parameters, required, output, cu)) -%>
 <% end -%>
 <% if not properties.empty? -%>
     properties:
-<%= lines(build_object_property(properties, required, output)) -%>
+<%= lines(build_object_property(properties, required, output, cu)) -%>
 <% end -%>
