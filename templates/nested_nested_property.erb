@@ -17,39 +17,34 @@
     "object" => "- !ruby/object:Api::Type::NestedObject",
   ]
 -%>
+	    properties:
 <% props.each do |key, value| -%>
 <% if value['title'] == 'Dict' -%>
-      - !ruby/object:Api::Type::NameValues
+              - !ruby/object:Api::Type::NameValues
 <% else -%>
-      <%= data_type[value['type']] %>
+              <%= data_type[value['type']] %>
 <% end -%>
-        name: '<%= key %>'
-        description: '<%= value['description'] %>'
-<% if required.include? key -%>
-        required: true
-<% end -%>
-<% if output.include? key -%>
-        output: true
-<% end -%>
+                name: '<%= key %>'
+                description: '<%= value['description'] %>'
 <% if value['title'] == 'Dict' -%>
-        key_type: <%= dict_type["string"] %>
+                key_type: <%= dict_type["string"] %>
 <% if not value['additionalProperties']['type'].nil? -%>
-        value_type: <%= dict_type[value['additionalProperties']['type']] %>
+                value_type: <%= dict_type[value['additionalProperties']['type']] %>
 <% else -%>
-        value_type: <%= dict_type["string"] %>
+                value_type: <%= dict_type["string"] %>
 <% end -%>
 <% end -%>
 <% if value['type'] == 'object' and not value['properties'].nil? -%>
-<%= lines(build_nested_object_property(value['properties'])) -%>
+    <%= lines(build_nested_nested_object_property(value['properties'])) -%>
 <% end -%>
 <% if value['type'] == 'array' -%>
 <%
   itype = value['items']['type']
   props = value['items']['properties']
 -%>
-        item_type: <%= array_type[itype] %>
+                item_type: <%= array_type[itype] %>
 <% if itype == 'object' -%>
-<%= lines(build_nested_object_property(props)) -%>
+    <%= lines(build_nested_nested_object_property(props)) -%>
 <% end -%>
 <% end -%>
 <% end -%>

@@ -82,6 +82,13 @@ class Compiler
     )
   end
 
+  def build_nested_nested_object_property(props)
+    compile_template(
+      'templates/nested_nested_property.erb',
+      props: props,
+    )
+  end
+
   def render()
     apis = get_apis
     ERB.new(File.read(@template), nil, '-%>').result(binding)

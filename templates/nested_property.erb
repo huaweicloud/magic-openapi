@@ -3,11 +3,48 @@
     "string" => "- !ruby/object:Api::Type::String",
     "boolean" => "- !ruby/object:Api::Type::Boolean",
     "integer" => "- !ruby/object:Api::Type::Integer",
+    "array" => "- !ruby/object:Api::Type::Array",
+    "object" => "- !ruby/object:Api::Type::NestedObject",
+  ]
+  dict_type = Hash[
+    "string" => "Api::Type::String",
+    "boolean" => "Api::Type::Boolean",
+    "integer" => "Api::Type::Integer",
+    "array" => "Api::Type::Array",
+  ]
+  array_type = Hash[
+    "string" => "- !ruby/object:Api::Type::String",
+    "object" => "- !ruby/object:Api::Type::NestedObject",
   ]
 -%>
 	properties:
 <% props.each do |key, value| -%>
+<% if value['title'] == 'Dict' -%>
+          - !ruby/object:Api::Type::NameValues
+<% else -%>
           <%= data_type[value['type']] %>
+<% end -%>
             name: '<%= key %>'
             description: '<%= value['description'] %>'
+<% if value['title'] == 'Dict' -%>
+            key_type: <%= dict_type["string"] %>
+<% if not value['additionalProperties']['type'].nil? -%>
+            value_type: <%= dict_type[value['additionalProperties']['type']] %>
+<% else -%>
+            value_type: <%= dict_type["string"] %>
+<% end -%>
+<% end -%>
+<% if value['type'] == 'object' and not value['properties'].nil? -%>
+    <%= lines(build_nested_nested_object_property(value['properties'])) -%>
+<% end -%>
+<% if value['type'] == 'array' -%>
+<%
+  itype = value['items']['type']
+  props = value['items']['properties']
+-%>
+            item_type: <%= array_type[itype] %>
+<% if itype == 'object' -%>
+    <%= lines(build_nested_nested_object_property(props)) -%>
+<% end -%>
+<% end -%>
 <% end -%>

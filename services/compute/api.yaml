@@ -218,6 +218,11 @@ definitions:
           different_host:
             type: string
             description: "Different host."
+          test_param_array:
+            type: array
+            description: "Test param array."
+            items:
+              $ref: '#/definitions/array_info'
   keypair(response):
     type: object
     x-resource: Keypairs
