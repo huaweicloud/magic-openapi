@@ -20,13 +20,10 @@ Dir.chdir(File.dirname(__FILE__))
 require 'compile/core'
 require 'open_api_parser'
 require 'optparse'
+require 'yaml'
 
 catalog = nil
 output = nil
-
-uris = [
-  '/os-keypairs',
-]
 
 ARGV << '-h' if ARGV.empty?
 
@@ -52,6 +49,7 @@ raise "Service '#{catalog}' does not have api.yaml" \
 raise "Output '#{output}' is not a directory" unless Dir.exist?(output)
 
 openapi = OpenApiParser::Specification.resolve(File.join(catalog, 'api.yaml'))
+uris = YAML.load_file(File.join(catalog, 'path.yaml'))
 
 temp = catalog.sub('services', 'templates')
 template = File.join(temp, 'api.erb')

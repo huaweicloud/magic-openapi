@@ -28,7 +28,9 @@ class Compiler
       api = Hash.new
       api['post'] = @openapi.endpoint(uri, 'post')
       api['get'] = @openapi.endpoint(uri+'/1', 'get')
-      apis.push(Api.new(api, uri))
+      if not api['post'].nil? and not api['get'].nil?
+        apis.push(Api.new(api, uri))
+      end
     end
     apis
   end
