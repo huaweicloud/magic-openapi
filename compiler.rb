@@ -50,8 +50,9 @@ raise "Output '#{output}' is not a directory" unless Dir.exist?(output)
 
 openapi = OpenApiParser::Specification.resolve(File.join(catalog, 'api.yaml'))
 uris = YAML.load_file(File.join(catalog, 'path.yaml'))
+overrides = OpenApiParser::Specification.resolve(File.join(catalog, 'override.yaml'))
 
 temp = catalog.sub('services', 'templates')
 template = File.join(temp, 'api.erb')
-compiler = Compiler.new(openapi, template, uris)
+compiler = Compiler.new(openapi, template, uris, overrides)
 compiler.generate output

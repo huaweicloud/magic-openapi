@@ -1,0 +1,26 @@
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: Compute Overrides
+paths:
+  /os-keypairs:
+    post:
+      parameters:
+        - name: keypair
+          in: body
+          schema:
+            $ref: '#/definitions/keypair'
+      responses:
+        '200':
+          description: 'ok'
+
+definitions:
+  keypair:
+    properties:
+      name:
+        description: "Overrides name and description."
+        properties:
+          description:
+            title: "desc1"
+          name:  # name should be the last property as it will override key of hash.
+            title: "name1"

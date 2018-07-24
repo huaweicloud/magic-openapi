@@ -16,10 +16,11 @@ require 'compile/api'
 class Compiler
   include ERB::Util
 
-  def initialize(openapi, template, uris)
+  def initialize(openapi, template, uris, overrides)
     @openapi = openapi
     @template = template
     @uris = uris
+    @overrides = overrides
   end
 
   def get_apis
@@ -29,6 +30,7 @@ class Compiler
       api['post'] = @openapi.endpoint(uri, 'post')
       api['get'] = @openapi.endpoint(uri+'/1', 'get')
       api['put'] = @openapi.endpoint(uri+'/1', 'put')
+      api['override'] = @overrides.endpoint(uri, 'post')
       if not api['post'].nil? and not api['get'].nil?
         apis.push(Api.new(api, uri))
       end
@@ -59,14 +61,14 @@ class Compiler
   def build_object_resource(object)
     compile_template(
       'templates/resource.erb',
-      properties: object.get_properties,
-      parameters: object.get_parameters,
       required: object.get_required,
       output: object.get_output,
       cu: object.get_create_update,
       resource_name: object.get_resource_name,
       description: object.get_description,
       msg_prefix: object.get_msg_prefix,
+      parameters: object.get_parameters,
+      properties: object.get_properties,
       base_url: object.uri
     )
   end

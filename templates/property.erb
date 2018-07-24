@@ -31,6 +31,9 @@
 <% if output.include? key -%>
         output: true
 <% end -%>
+<% if value.include? 'field' -%>
+	field: '<%= value['field'] %>'
+<% end -%>
 <% if cu.include? key -%>
 	create_update: '<%= cu[key] %>'
 <% end -%>
