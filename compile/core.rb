@@ -66,6 +66,7 @@ class Compiler
       cu: object.get_create_update,
       resource_name: object.get_resource_name,
       description: object.get_description,
+      msg_prefix: object.get_msg_prefix,
       base_url: object.uri
     )
   end

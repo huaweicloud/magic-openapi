@@ -38,6 +38,20 @@ class Api
     end
   end
 
+  def get_msg_prefix
+    raw = @api['post'].raw
+    if raw['parameters'].nil?
+      return ''
+    end
+    msg_prefix = ''
+    raw['parameters'].each do |param|
+      if not param['in'].nil? and param['in'] == 'body'
+        msg_prefix = param['name']
+      end
+    end
+    msg_prefix
+  end
+
   def get_properties
     resp_body = @api['get'].response_body_schema(200)
     resp_body['properties']
