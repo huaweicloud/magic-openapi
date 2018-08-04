@@ -57,22 +57,24 @@ class Api
     resp_body = @api['get'].response_body_schema(200)
     props = resp_body['properties']
     # get overrides
-    override = @api['override'].body_schema
-    if not override.nil? and not override['properties'].nil?
-      override['properties'].each do |key, value|
-        if props.include? key and not value['properties'].nil?
-          value['properties'].each do |subkey, subvalue|
-            if subkey == 'name' and not subvalue['title'].nil?
-              props[subvalue['title']] = props[key]
-	      props[subvalue['title']]['field'] = key
-	      props.delete(key)
-	    elsif subkey == 'description' and not subvalue['title'].nil?
-              props[key][subkey] = subvalue['title']
-	    end
-	  end
-	end
+	if not @api['override'].nil?
+      override = @api['override'].body_schema
+      if not override.nil? and not override['properties'].nil?
+        override['properties'].each do |key, value|
+          if props.include? key and not value['properties'].nil?
+            value['properties'].each do |subkey, subvalue|
+              if subkey == 'name' and not subvalue['title'].nil?
+                props[subvalue['title']] = props[key]
+	            props[subvalue['title']]['field'] = key
+	            props.delete(key)
+	          elsif subkey == 'description' and not subvalue['title'].nil?
+                props[key][subkey] = subvalue['title']
+			  end
+	        end
+	      end
+        end
       end
-    end
+	end
     props
   end
 
@@ -109,22 +111,24 @@ class Api
     end
 
     # get overrides and handle it
-    override = @api['override'].body_schema
-    if not override.nil? and not override['properties'].nil?
-      override['properties'].each do |key, value|
-        if parameters.include? key and not value['properties'].nil?
-          value['properties'].each do |subkey, subvalue|
-            if subkey == 'name' and not subvalue['title'].nil?
-              parameters[subvalue['title']] = parameters[key]
-	      parameters[subvalue['title']]['field'] = key
-	      parameters.delete(key)
-	    elsif subkey == 'description' and not subvalue['title'].nil?
-              parameters[key][subkey] = subvalue['title']
-	    end
-	  end
-	end
+	if not @api['override'].nil?
+      override = @api['override'].body_schema
+      if not override.nil? and not override['properties'].nil?
+        override['properties'].each do |key, value|
+          if parameters.include? key and not value['properties'].nil?
+            value['properties'].each do |subkey, subvalue|
+              if subkey == 'name' and not subvalue['title'].nil?
+                parameters[subvalue['title']] = parameters[key]
+	            parameters[subvalue['title']]['field'] = key
+	            parameters.delete(key)
+	          elsif subkey == 'description' and not subvalue['title'].nil?
+                parameters[key][subkey] = subvalue['title']
+	          end
+	        end
+	      end
+        end
       end
-    end
+	end
     parameters
   end
 

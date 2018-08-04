@@ -30,7 +30,11 @@ class Compiler
       api['post'] = @openapi.endpoint(uri, 'post')
       api['get'] = @openapi.endpoint(uri+'/1', 'get')
       api['put'] = @openapi.endpoint(uri+'/1', 'put')
-      api['override'] = @overrides.endpoint(uri, 'post')
+	  if not @overrides.nil?
+        api['override'] = @overrides.endpoint(uri, 'post')
+	  else
+		api['override'] = nil
+      end
       if not api['post'].nil? and not api['get'].nil?
         apis.push(Api.new(api, uri))
       end
