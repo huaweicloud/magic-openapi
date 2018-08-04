@@ -1,0 +1,10 @@
+--- !ruby/object:Api::Product
+name: VPC
+prefix: huawei_vpc
+base_url: https://host.huawei.com/network/v1/
+scopes:
+  - https://host.huawei.com/network
+objects:
+<% apis.each do |api| -%>
+<%= lines(build_object_resource(api)) -%>
+<% end -%>
