@@ -32,10 +32,10 @@
         output: true
 <% end -%>
 <% if value.include? 'field' -%>
-	field: '<%= value['field'] %>'
+	    field: '<%= value['field'] %>'
 <% end -%>
 <% if cu.include? key -%>
-	create_update: '<%= cu[key] %>'
+	    create_update: '<%= cu[key] %>'
 <% end -%>
 <% if value['title'] == 'Dict' -%>
         key_type: <%= dict_type["string"] %>

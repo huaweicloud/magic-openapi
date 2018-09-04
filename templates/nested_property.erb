@@ -17,7 +17,7 @@
     "object" => "- !ruby/object:Api::Type::NestedObject",
   ]
 -%>
-	properties:
+	    properties:
 <% props.each do |key, value| -%>
 <% if value['title'] == 'Dict' -%>
           - !ruby/object:Api::Type::NameValues
