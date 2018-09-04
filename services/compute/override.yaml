@@ -3,24 +3,39 @@ info:
   version: 1.0.0
   title: Compute Overrides
 paths:
-  /os-keypairs:
+  /servers:
     post:
       parameters:
-        - name: keypair
+        - name: server
           in: body
           schema:
-            $ref: '#/definitions/keypair'
+            $ref: '#/definitions/server'
       responses:
         '200':
           description: 'ok'
 
 definitions:
-  keypair:
+  server:
     properties:
-      name:
-        description: "Overrides name and description."
+      adminPass:
+        description: "Overrides adminPass to admin_pass."
         properties:
-          description:
-            title: "desc1"
           name:  # name should be the last property as it will override key of hash.
-            title: "name1"
+            title: "admin_pass"
+      description:
+        description: "Overrides description to desc."
+        properties:
+          name:  # name should be the last property as it will override key of hash.
+            title: "desc"
+      updated:
+        description: "Overrides updated to updated_time."
+        properties:
+          name:  # name should be the last property as it will override key of hash.
+            title: "updated_time"
+      networks:
+        description: "Overrides networks.fixed_ip to networks.private_ip."
+        properties:
+          fixed_ip:
+            properties:
+            name:
+              title: "private_ip"

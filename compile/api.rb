@@ -63,13 +63,23 @@ class Api
         override['properties'].each do |key, value|
           if props.include? key and not value['properties'].nil?
             value['properties'].each do |subkey, subvalue|
-              if subkey == 'name' and not subvalue['title'].nil?
-                props[subvalue['title']] = props[key]
-	            props[subvalue['title']]['field'] = key
-	            props.delete(key)
-	          elsif subkey == 'description' and not subvalue['title'].nil?
-                props[key][subkey] = subvalue['title']
-			  end
+		      if subvalue['properties'].nil?
+                if subkey == 'name' and not subvalue['title'].nil?
+                  props[subvalue['title']] = props[key]
+	              props[subvalue['title']]['field'] = key
+	              props.delete(key)
+	            elsif subkey == 'description' and not subvalue['title'].nil?
+                  props[key][subkey] = subvalue['title']
+			    end
+			  else
+				subvalue['properties'].each do |subkey2, subvalue2|
+				  if subkey2 == 'name' and not subvalue2['title'].nil?
+					props[key]['properties'][subvalue2['title']] = props[key]['properties'][subkey]
+					props[key]['properties'][subvalue2['title']]['field'] = subkey
+					props[key]['properties'].delete(subkey)
+				  end
+				end
+		      end
 	        end
 	      end
         end
@@ -116,14 +126,25 @@ class Api
       if not override.nil? and not override['properties'].nil?
         override['properties'].each do |key, value|
           if parameters.include? key and not value['properties'].nil?
+		    puts value['properties']
             value['properties'].each do |subkey, subvalue|
-              if subkey == 'name' and not subvalue['title'].nil?
-                parameters[subvalue['title']] = parameters[key]
-	            parameters[subvalue['title']]['field'] = key
-	            parameters.delete(key)
-	          elsif subkey == 'description' and not subvalue['title'].nil?
-                parameters[key][subkey] = subvalue['title']
-	          end
+		      if subvalue['properties'].nil?
+                if subkey == 'name' and not subvalue['title'].nil?
+                  parameters[subvalue['title']] = parameters[key]
+	              parameters[subvalue['title']]['field'] = key
+	              parameters.delete(key)
+	            elsif subkey == 'description' and not subvalue['title'].nil?
+                  parameters[key][subkey] = subvalue['title']
+	            end
+			  else
+				subvalue['properties'].each do |subkey2, subvalue2|
+				  if subkey2 == 'name' and not subvalue2['title'].nil?
+					props[key]['properties'][subvalue2['title']] = props[key]['properties'][subkey]
+					props[key]['properties'][subvalue2['title']]['field'] = subkey
+					props[key]['properties'].delete(subkey)
+				  end
+				end
+		      end
 	        end
 	      end
         end

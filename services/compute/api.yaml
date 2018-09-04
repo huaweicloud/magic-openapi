@@ -198,7 +198,7 @@ definitions:
       os:scheduler_hints:
         $ref: '#/definitions/os:scheduler_hints'
       personality:
-        $ref: '#/definitions/personality'
+        $ref: '#/definitions/personalities'
       security_groups:
         type: 'array'
         description: 'One or more security groups.'
@@ -326,7 +326,6 @@ definitions:
         type: 'string'
         description: 'IPv6 address that should be used to access this server.'
       addresses:
-        description: 'The addresses for the server.'
         $ref: '#/definitions/addresses'
       config_drive:
         type: 'boolean'
@@ -484,6 +483,11 @@ definitions:
       tenancy:
         type: 'string'
         description: 'Launch a VM onto a Dedicated Host or the default shared host.'
+  personalities:
+    type: 'array'
+    description: 'The file path and content to inject into server at launch.'
+    items:
+      $ref: '#/definitions/personality'
   personality:
     type: object
     required:
@@ -586,17 +590,11 @@ definitions:
         description: 'The message of the fault.'
   addresses:
     type: object
-    properties:
-      private:
-        type: 'array'
-        description: 'The private addresses.'
-        items:
-          $ref: '#/definitions/network_info'
-      public:
-        type: 'array'
-        description: 'The public addresses.'
-        items:
-          $ref: '#/definitions/network_info'
+    description: 'The addresses for the server.'
+    additionalProperties:
+      type: 'array'
+      items:
+        $ref: '#/definitions/network_info'
   network_info:
     required:
     - 'OS-EXT-IPS-MAC:mac_addr'

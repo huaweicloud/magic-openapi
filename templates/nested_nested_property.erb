@@ -13,20 +13,20 @@
     "array" => "Api::Type::Array",
   ]
   array_type = Hash[
-    "string" => "- !ruby/object:Api::Type::String",
-    "object" => "- !ruby/object:Api::Type::NestedObject",
+    "string" => "!ruby/object:Api::Type::String",
+    "object" => "!ruby/object:Api::Type::NestedObject",
   ]
 -%>
 	    properties:
 <% props.each do |key, value| -%>
-<% if value['title'] == 'Dict' -%>
+<% if not value['additionalProperties'].nil? -%>
               - !ruby/object:Api::Type::NameValues
 <% else -%>
               <%= data_type[value['type']] %>
 <% end -%>
                 name: '<%= key %>'
                 description: '<%= value['description'] %>'
-<% if value['title'] == 'Dict' -%>
+<% if not value['additionalProperties'].nil? -%>
                 key_type: <%= dict_type["string"] %>
 <% if not value['additionalProperties']['type'].nil? -%>
                 value_type: <%= dict_type[value['additionalProperties']['type']] %>
