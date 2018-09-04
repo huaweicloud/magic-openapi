@@ -1,0 +1,324 @@
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: Compute(Nova)
+host: host.huawei.com
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /os-keypairs:
+    post:
+      tags:
+        - Keypairs
+      x-resource: 'Keypairs'
+      x-name: 'Create Or Import Keypair'
+      x-category: 18759a3b-73a5-427a-a7fd-e7aced3f2cbd
+      x-source: 1
+      x-scope: 1
+      x-constraint: 'The success status code was changed from 200 to 201 in version 2.2Bare Metal Scenario:1. Only support when using Software Overlay network type.'
+      x-section: ''
+      description: 'Generates or imports a keypair.'
+      operationId: postKeypairs122_Create Or Import Keypair
+      parameters:
+        - name: keypair
+          in: body
+          description: Keypair object
+          required: true
+          schema:
+            $ref: '#/definitions/keypair(request)'
+      responses:
+        '200':
+          description: 'Keypair object'
+          schema:
+            $ref: '#/definitions/keypair(response)'
+        "400":
+          description: 'badRequest'
+        "401":
+          description: 'unauthorized'
+        "403":
+          description: 'forbidden'
+        "409":
+          description: 'conflict'
+    get:
+      tags:
+        - Keypairs
+      x-resource: 'Keypairs'
+      x-name: 'List Keypairs'
+      x-category: 18759a3b-73a5-427a-a7fd-e7aced3f2cbd
+      x-source: 1
+      x-scope: 1
+      x-constraint: 'Bare Metal Scenario:1. Only support when using Software Overlay network type.'
+      x-section: ''
+      description: 'Lists keypairs that are associated with the account.'
+      operationId: getKeypairs123_List Keypairs
+      parameters:
+        - name: user_id
+          in: query
+          description: 'This allows administrative users to list key-pairs of specified user ID.New in version 2.10'
+          required: false
+          type: string
+      responses:
+        "200":
+          description: 'Normal status'
+          schema:
+            type: object
+            required:
+              - keypairs
+            properties:
+              keypairs:
+                type: array
+                description: 'Array of Keypair objects.'
+                items:
+                  $ref: '#/definitions/keypair'
+        "401":
+          description: 'unauthorized'
+        "403":
+          description: 'forbidden'
+  /os-keypairs/{keypair_name}:
+    delete:
+      tags:
+        - Keypairs
+      x-resource: 'Keypairs'
+      x-name: 'Delete Keypair'
+      x-category: 18759a3b-73a5-427a-a7fd-e7aced3f2cbd
+      x-source: 1
+      x-scope: 1
+      x-constraint: 'The normal return code is 204 in version 2.2 to match the fact that no body content is returned.Bare Metal Scenario:1. Only support when using Software Overlay network type.'
+      x-section: ''
+      description: 'Deletes a keypair.'
+      operationId: deleteKeypairs247_Delete Keypair
+      parameters:
+        - name: keypair_name
+          in: path
+          description: 'A name for the keypair which will be used to reference it later.'
+          required: true
+          type: string
+      responses:
+        "204":
+          description: 'No Content'
+        "401":
+          description: 'unauthorized'
+        "403":
+          description: 'forbidden'
+        "404":
+          description: 'itemNotFound'
+        '200':
+          description: 'success'
+    get:
+      tags:
+        - Keypairs
+      x-resource: 'Keypairs'
+      x-name: 'Show Keypair Details'
+      x-category: 18759a3b-73a5-427a-a7fd-e7aced3f2cbd
+      x-source: 1
+      x-scope: 1
+      x-constraint: 'Bare Metal Scenario:1. Only support when using Software Overlay network type.'
+      x-section: ''
+      description: 'Shows details for a keypair that is associated with the account.'
+      operationId: getKeypairs248_Show Keypair Details
+      parameters:
+        - name: keypair_name
+          in: path
+          description: 'The keypair name.'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Keypair object.'
+          schema:
+            $ref: '#/definitions/keypair(detail)'
+        "401":
+          description: 'unauthorized'
+        "403":
+          description: 'forbidden'
+        "404":
+          description: 'itemNotFound'
+    put:
+      tags:
+        - Keypairs
+      x-resource: 'Keypairs'
+      x-name: 'Update Keypair'
+      x-category: 18759a3b-73a5-427a-a7fd-e7aced3f2cbd
+      x-source: 1
+      x-scope: 1
+      x-constraint: 'Update Keypair.'
+      x-section: ''
+      description: 'Update Keypair.'
+      operationId: putKeypairs249_Update Keypair
+      parameters:
+        - name: keypair
+          in: body
+          description: 'A keypair object.'
+          schema:
+            $ref: '#/definitions/keypair(update)'
+      responses:
+        '200':
+          description: 'Keypair object.'
+          schema:
+            $ref: '#/definitions/keypair(detail)'
+        "401":
+          description: 'unauthorized'
+        "403":
+          description: 'forbidden'
+        "404":
+          description: 'itemNotFound'
+definitions:
+  keypair:
+    type: object
+    x-resource: Keypairs
+    properties:
+      fingerprint:
+        type: string
+        description: "The fingerprint for the keypair."
+      name:
+        type: string
+        description: "A name for the keypair which will be used to reference it later."
+      public_key:
+        type: string
+        description: "The keypair public key."
+      type:
+        type: string
+        description: "The type of the keypair. Allowed values are ssh or x509New in version 2.2"
+  keypair(detail):
+    type: object
+    x-resource: Keypairs
+    properties:
+      fingerprint:
+        type: string
+        description: "The fingerprint for the keypair."
+      name:
+        type: string
+        description: "A name for the keypair which will be used to reference it later."
+      public_key:
+        type: string
+        description: "The keypair public key."
+      type:
+        type: string
+        description: "The type of the keypair. Allowed values are ssh or x509New in version 2.2"
+      user_id:
+        type: string
+        description: "The user_id of the keypair."
+      detail_test:
+        type: string
+        description: "The detail test of keypair."
+  keypair(request):
+    type: object
+    x-resource: Keypairs
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        description: "A name for the keypair which will be used to reference it later."
+      public_key:
+        type: string
+        description: "The keypair public key."
+      type:
+        type: string
+        description: "The type of the keypair. Allowed values are ssh or x509New in version 2.2"
+      user_id:
+        type: string
+        description: "The user_id of the keypair."
+      metadata:
+        type: object
+        title: Dict
+        description: "Metadata key and value pairs."
+        additionalProperties:
+          type: string
+      test_param:
+        type: string
+        description: "Test param."
+      test_param_array:
+        type: array
+        description: "Test param array."
+        items:
+          $ref: '#/definitions/array_info'
+      scheduler_hints:
+        type: object
+        description: "Scheduler hints."
+        properties:
+          same_host:
+            type: string
+            description: "Same host."
+          different_host:
+            type: string
+            description: "Different host."
+          test_param_array:
+            type: array
+            description: "Test param array."
+            items:
+              $ref: '#/definitions/array_info'
+  keypair(response):
+    type: object
+    x-resource: Keypairs
+    properties:
+      fingerprint:
+        type: string
+        description: "The fingerprint for the keypair."
+      name:
+        type: string
+        description: "A name for the keypair which will be used to reference it later."
+      private_key:
+        type: string
+        description: "If you do not provide a public key on create, a new keypair will be built for you, and the private key will be returned during the initial create call."
+      public_key:
+        type: string
+        description: "The keypair public key."
+      type:
+        type: string
+        description: "The type of the keypair. Allowed values are ssh or x509New in version 2.2"
+      user_id:
+        type: string
+        description: "The user_id of the keypair."
+      metadata:
+        type: object
+        title: Dict
+        description: "Metadata key and value pairs."
+        additionalProperties:
+          type: string
+      test_array:
+        type: array
+        description: "array testing"
+        items:
+          $ref: '#/definitions/array_info'
+  keypair(update):
+    type: object
+    x-resource: Keypairs
+    properties:
+      name:
+        type: string
+        description: "A name for the keypair which will be used to reference it later."
+      public_key:
+        type: string
+        description: "The keypair public key."
+      type:
+        type: string
+        description: "The type of the keypair. Allowed values are ssh or x509New in version 2.2"
+      user_id_update:
+        type: string
+        description: "The user_id of the keypair."
+      metadata:
+        type: object
+        title: Dict
+        description: "Metadata key and value pairs."
+        additionalProperties:
+          type: string
+      test_param_array:
+        type: array
+        description: "Test param array."
+        items:
+          $ref: '#/definitions/array_info'
+  array_info:
+    type: object
+    x-resource: Keypairs
+    properties:
+      array_a:
+        type: string
+        description: "array_a of test_array"
+      array_b:
+        type: string
+        description: "array_b of test_array"

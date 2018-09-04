@@ -10,91 +10,58 @@ consumes:
 produces:
   - application/json
 paths:
-  /os-keypairs:
+  /servers:
     post:
       tags:
-        - Keypairs
-      x-resource: 'Keypairs'
-      x-name: 'Create Or Import Keypair'
+        - Servers
+      x-resource: 'Servers'
+      x-name: 'Create Server'
       x-category: 18759a3b-73a5-427a-a7fd-e7aced3f2cbd
-      x-source: 1
+      x-source: 2
       x-scope: 1
-      x-constraint: 'The success status code was changed from 200 to 201 in version 2.2Bare Metal Scenario:1. Only support when using Software Overlay network type.'
       x-section: ''
-      description: 'Generates or imports a keypair.'
-      operationId: postKeypairs122_Create Or Import Keypair
+      description: 'Creates a server.'
+      operationId: postServers189_Create Server
       parameters:
-        - name: keypair
+        - name: 'server'
           in: body
-          description: Keypair object
+          description: 'A server object.'
           required: true
           schema:
-            $ref: '#/definitions/keypair(request)'
+            $ref: '#/definitions/server(create)'
       responses:
         '200':
-          description: 'Keypair object'
+          description: 'A server object'
           schema:
-            $ref: '#/definitions/keypair(response)'
-        "400":
+            $ref: '#/definitions/server(response)'
+        '202':
+          description: 'Accepted'
+        '400':
           description: 'badRequest'
-        "401":
+        '401':
           description: 'unauthorized'
-        "403":
+        '403':
           description: 'forbidden'
-        "409":
+        '409':
           description: 'conflict'
-    get:
-      tags:
-        - Keypairs
-      x-resource: 'Keypairs'
-      x-name: 'List Keypairs'
-      x-category: 18759a3b-73a5-427a-a7fd-e7aced3f2cbd
-      x-source: 1
-      x-scope: 1
-      x-constraint: 'Bare Metal Scenario:1. Only support when using Software Overlay network type.'
-      x-section: ''
-      description: 'Lists keypairs that are associated with the account.'
-      operationId: getKeypairs123_List Keypairs
-      parameters:
-        - name: user_id
-          in: query
-          description: 'This allows administrative users to list key-pairs of specified user ID.New in version 2.10'
-          required: false
-          type: string
-      responses:
-        "200":
-          description: 'Normal status'
-          schema:
-            type: object
-            required:
-              - keypairs
-            properties:
-              keypairs:
-                type: array
-                description: 'Array of Keypair objects.'
-                items:
-                  $ref: '#/definitions/keypair'
-        "401":
-          description: 'unauthorized'
-        "403":
-          description: 'forbidden'
-  /os-keypairs/{keypair_name}:
+        '413':
+          description: 'entityTooLarge'
+  /servers/{server_id}:
     delete:
       tags:
-        - Keypairs
-      x-resource: 'Keypairs'
-      x-name: 'Delete Keypair'
+        - Servers
+      x-resource: 'Servers'
+      x-name: 'Delete Server'
       x-category: 18759a3b-73a5-427a-a7fd-e7aced3f2cbd
       x-source: 1
       x-scope: 1
-      x-constraint: 'The normal return code is 204 in version 2.2 to match the fact that no body content is returned.Bare Metal Scenario:1. Only support when using Software Overlay network type.'
       x-section: ''
-      description: 'Deletes a keypair.'
-      operationId: deleteKeypairs247_Delete Keypair
+      description: 'Deletes a server.'
+      operationId: deleteServers275_Delete Server
       parameters:
-        - name: keypair_name
+        - name: server_id
           in: path
-          description: 'A name for the keypair which will be used to reference it later.'
+          description: 'The UUID of the server.'
           required: true
           type: string
       responses:
@@ -110,27 +77,28 @@ paths:
           description: 'success'
     get:
       tags:
-        - Keypairs
-      x-resource: 'Keypairs'
-      x-name: 'Show Keypair Details'
+        - Servers
+      x-resource: 'Servers'
+      x-name: 'Show Server Details'
       x-category: 18759a3b-73a5-427a-a7fd-e7aced3f2cbd
-      x-source: 1
+      x-source: 2
       x-scope: 1
-      x-constraint: 'Bare Metal Scenario:1. Only support when using Software Overlay network type.'
       x-section: ''
-      description: 'Shows details for a keypair that is associated with the account.'
-      operationId: getKeypairs248_Show Keypair Details
+      description: 'Shows details for a server.'
+      operationId: getServers276_Show Server Details
       parameters:
-        - name: keypair_name
+        - name: server_id
           in: path
-          description: 'The keypair name.'
+          description: 'The UUID of the server.'
           required: true
           type: string
       responses:
         '200':
-          description: 'Keypair object.'
+          description: 'A server object.'
           schema:
-            $ref: '#/definitions/keypair(detail)'
+            $ref: '#/definitions/server(response)'
+        "400":
+          description: 'badRequest'
         "401":
           description: 'unauthorized'
         "403":
@@ -139,27 +107,34 @@ paths:
           description: 'itemNotFound'
     put:
       tags:
-        - Keypairs
-      x-resource: 'Keypairs'
-      x-name: 'Update Keypair'
+        - Servers
+      x-resource: 'Servers'
+      x-name: 'Update Server'
       x-category: 18759a3b-73a5-427a-a7fd-e7aced3f2cbd
       x-source: 1
       x-scope: 1
-      x-constraint: 'Update Keypair.'
       x-section: ''
-      description: 'Update Keypair.'
-      operationId: putKeypairs249_Update Keypair
+      description: 'Update the editable attributes of an existing server.'
+      operationId: putServers277_Update Server
       parameters:
-        - name: keypair
+        - name: server_id
+          in: path
+          description: 'The UUID of the server.'
+          required: true
+          type: string
+        - name: server
           in: body
-          description: 'A keypair object.'
+          description: 'A server object.'
+          required: true
           schema:
-            $ref: '#/definitions/keypair(update)'
+            $ref: '#/definitions/server(update)'
       responses:
         '200':
-          description: 'Keypair object.'
+          description: 'A server object.'
           schema:
-            $ref: '#/definitions/keypair(detail)'
+            $ref: '#/definitions/server(response)'
+        "400":
+          description: 'badRequest'
         "401":
           description: 'unauthorized'
         "403":
@@ -167,158 +142,479 @@ paths:
         "404":
           description: 'itemNotFound'
 definitions:
-  keypair:
+  server(create):
     type: object
-    x-resource: Keypairs
-    properties:
-      fingerprint:
-        type: string
-        description: "The fingerprint for the keypair."
-      name:
-        type: string
-        description: "A name for the keypair which will be used to reference it later."
-      public_key:
-        type: string
-        description: "The keypair public key."
-      type:
-        type: string
-        description: "The type of the keypair. Allowed values are ssh or x509New in version 2.2"
-  keypair(detail):
-    type: object
-    x-resource: Keypairs
-    properties:
-      fingerprint:
-        type: string
-        description: "The fingerprint for the keypair."
-      name:
-        type: string
-        description: "A name for the keypair which will be used to reference it later."
-      public_key:
-        type: string
-        description: "The keypair public key."
-      type:
-        type: string
-        description: "The type of the keypair. Allowed values are ssh or x509New in version 2.2"
-      user_id:
-        type: string
-        description: "The user_id of the keypair."
-      detail_test:
-        type: string
-        description: "The detail test of keypair."
-  keypair(request):
-    type: object
-    x-resource: Keypairs
+    x-resource: Servers
     required:
-      - name
+    - 'flavorRef'
+    - 'name'
+    - 'networks'
+    properties:
+      OS-DCF:diskConfig:
+        type: 'string'
+        description: 'Disk configuration.'
+      accessIPv4:
+        type: 'string'
+        description: 'IPv4 address that should be used to access this server.'
+      accessIPv6:
+        type: 'string'
+        description: 'IPv6 address that should be used to access this server.'
+      adminPass:
+        type: 'string'
+        description: 'The administrative password of the server.'
+      availability_zone:
+        type: 'string'
+        description: 'The availability zone from which to launch the server.'
+      block_device_mapping_v2:
+        $ref: '#/definitions/block_device_mapping_v2'
+      config_drive:
+        type: 'boolean'
+        description: 'Indicates whether a configuration drive enables metadata injection.'
+      description:
+        type: 'string'
+        description: 'A free form description of the server.'
+      flavorRef:
+        type: 'string'
+        description: 'The flavor reference, as a UUID or full URL, for the flavor for your server instance.'
+      imageRef:
+        type: 'string'
+        description: 'The UUID of the image to use for your server instance.'
+      key_name:
+        type: 'string'
+        description: 'Key pair name.'
+      metadata:
+        type: 'object'
+        description: 'Metadata key and value pairs.'
+        additionalProperties:
+          type: 'string'
+      name:
+        type: 'string'
+        description: 'The name of the server.'
+      networks:
+        type: 'array'
+        description: 'A networks object.'
+        items:
+          $ref: '#/definitions/network'
+      os:scheduler_hints:
+        $ref: '#/definitions/os:scheduler_hints'
+      personality:
+        $ref: '#/definitions/personality'
+      security_groups:
+        type: 'array'
+        description: 'One or more security groups.'
+        items:
+          $ref: '#/definitions/security_group'
+      user_data:
+        type: 'string'
+        description: 'Configuration information or scripts to use upon launch'
+  server(update):
+    type: object
+    properties:
+      OS-DCF:diskConfig:
+        type: 'string'
+        description: 'Disk configuration.'
+      accessIPv4:
+        type: 'string'
+        description: 'IPv4 address that should be used to access this server.'
+      accessIPv6:
+        type: 'string'
+        description: 'IPv6 address that should be used to access this server.'
+      description:
+        type: 'string'
+        description: 'A free form description of the server.'
+      name:
+        type: 'string'
+        description: 'The name of the server.'
+  server(response):
+    type: object
+    x-resource: Servers
+    required:
+    - "OS-DCF:diskConfig"
+    - "OS-EXT-AZ:availability_zone"
+    - "OS-EXT-SERV-ATTR:hostname"
+    - "OS-EXT-SERV-ATTR:kernel_id"
+    - "OS-EXT-SERV-ATTR:launch_index"
+    - "OS-EXT-SERV-ATTR:ramdisk_id"
+    - "OS-EXT-SERV-ATTR:reservation_id"
+    - "OS-EXT-SERV-ATTR:root_device_name"
+    - "OS-EXT-SERV-ATTR:user_data"
+    - "OS-EXT-SRV-ATTR:host"
+    - "OS-EXT-SRV-ATTR:hypervisor_hostname"
+    - "OS-EXT-SRV-ATTR:instance_name"
+    - "OS-EXT-STS:power_state"
+    - "OS-EXT-STS:task_state"
+    - "OS-EXT-STS:vm_state"
+    - "OS-SRV-USG:launched_at"
+    - "OS-SRV-USG:terminated_at"
+    - "accessIPv4"
+    - "accessIPv6"
+    - "addresses"
+    - "config_drive"
+    - "created"
+    - "flavor"
+    - "hostId"
+    - "host_status"
+    - "id"
+    - "image"
+    - "key_name"
+    - "links"
+    - "metadata"
+    - "name"
+    - "os-extended-volumes:volumes_attached"
+    - "progress"
+    - "security_groups"
+    - "status"
+    - "tenant_id"
+    - "updated"
+    properties:
+      OS-DCF:diskConfig:
+        type: 'string'
+        description: 'Disk configuration.'
+      OS-EXT-AZ:availability_zone:
+        type: 'string'
+        description: 'The availability zone name.'
+      OS-EXT-SERV-ATTR:hostname:
+        type: 'string'
+        description: 'The hostname set on the instance when it is booted.'
+      OS-EXT-SERV-ATTR:kernel_id:
+        type: "string"
+        description: 'The UUID of the kernel image when using an AMI.'
+      OS-EXT-SERV-ATTR:launch_index:
+        type: "integer"
+        format: "int32"
+        description: 'the sequence in which the servers were launched.'
+      OS-EXT-SERV-ATTR:ramdisk_id:
+        type: "string"
+        description: 'The UUID of the ramdisk image when using an AMI.'
+      OS-EXT-SERV-ATTR:reservation_id:
+        type: "string"
+        description: 'The reservation id for the server.'
+      OS-EXT-SERV-ATTR:root_device_name:
+        type: "string"
+        description: 'The root device name for the instance.'
+      OS-EXT-SERV-ATTR:user_data:
+        type: "string"
+        description: 'The user data the instance was created with.'
+      OS-EXT-SERV-ATTR:host:
+        type: "string"
+        description: 'The host name where the server launched.'
+      OS-EXT-SERV-ATTR:hypervisor_hostname:
+        type: "string"
+        description: 'The hypervisor host name.'
+      OS-EXT-SERV-ATTR:instance_name:
+        type: "string"
+        description: 'The instance name'
+      OS-EXT-STS:power_state:
+        type: "integer"
+        description: 'The power state of the instance.'
+      OS-EXT-STS:task_state:
+        type: "string"
+        description: 'The task state of the instance.'
+      OS-EXT-STS:vm_state:
+        type: "string"
+        description: 'The VM state.'
+      OS-EXT-USG:launched_at:
+        type: "string"
+        description: 'The date and time when the server was launched.'
+      OS-EXT-USG:terminated_at:
+        type: "string"
+        description: 'The date and time when the server was deleted.'
+      accessIPv4:
+        type: 'string'
+        description: 'IPv4 address that should be used to access this server.'
+      accessIPv6:
+        type: 'string'
+        description: 'IPv6 address that should be used to access this server.'
+      addresses:
+        description: 'The addresses for the server.'
+        $ref: '#/definitions/addresses'
+      config_drive:
+        type: 'boolean'
+        description: 'Indicates whether a configuration drive enables metadata injection.'
+      created:
+        type: 'string'
+        description: 'The date and time when the resource was created.'
+      fault:
+        description: 'A fault object.'
+        $ref: '#/definitions/fault'
+      flavor:
+        description: 'The ID and links for the flavor for your server instance.'
+        $ref: '#/definitions/flavor'
+      hostId:
+        type: 'string'
+        description: 'The ID of the host.'
+      host_status:
+        type: 'string'
+        description: 'The host status.'
+      id:
+        type: 'string'
+        description: 'The UUID of the server.'
+      image:
+        type: 'string'
+        description: 'The UUID and links for the image for your server instance.'
+      key_name:
+        type: 'string'
+        description: 'Key pair name.'
+      links:
+        type: 'array'
+        description: 'Links to the resources in question.'
+        items:
+          $ref: '#/definitions/link'
+      metadata:
+        type: 'object'
+        description: 'Metadata key and value pairs.'
+        additionalProperties:
+          type: 'string'
+      name:
+        type: 'string'
+        description: 'The name of the server.'
+      os-extended-volumes:volumes_attached:
+        type: 'array'
+        description: 'The attached volumes, if any.'
+        items:
+          $ref: '#/definitions/volume'
+      progress:
+        type: 'integer'
+        format: 'int32'
+        description: 'A percentage value of the build progress.'
+      security_groups:
+        type: 'array'
+        description: 'One or more security groups.'
+        items:
+          $ref: '#/definitions/security_group_response'
+      status:
+        type: 'string'
+        description: 'The server status.'
+      tenant_id:
+        type: 'string'
+        description: 'The UUID of the tenant in a multi-tenancy cloud.'
+      updated:
+        type: 'string'
+        description: 'The date and time when the resource was updated.'
+  block_device_mapping_v2:
+    required:
+    - 'boot_index'
+    - 'destination_type'
+    - 'source_type'
+    - 'uuid'
+    type: 'object'
+    description: ''
+    properties:
+      availability_zone:
+        type: 'string'
+        description: 'The volume availability zone of the dest volume.'
+      boot_index:
+        type: 'string'
+        description: 'Defines the order in which a hypervisor tries devices when it attempts to boot the guest from storage.'
+      delete_on_termination:
+        type: 'boolean'
+        description: 'Whether deleting the boot volume when the server is destroyed.'
+      destination_type:
+        type: 'string'
+        description: 'Defines where the volume comes from.'
+        enum:
+        - 'local'
+        - 'volume'
+      device_name:
+        type: string
+        description: 'A path to the device for the volume that you want to use to boot the server.'
+      guest_format:
+        type: string
+        description: 'Specifies the guest server disk file system format.'
+      source_type:
+        type: string
+        description: 'The source type of the volume.'
+        enum:
+        - 'blank'
+        - 'snapshot'
+        - 'volume'
+        - 'image'
+      tag:
+        type: 'string'
+        description: 'The tag as a string.'
+      uuid:
+        type: 'string'
+        description: 'The UUID of the source.'
+      volume_size:
+        type: 'string'
+        description: 'The volume type name of the dest volume.'
+  network:
+    type: object
+    properties:
+      fixed_ip:
+        type: 'string'
+        description: 'A fixed IPv4 address for the NIC.'
+      port:
+        type: 'string'
+        description: 'To provision the server instance with a NIC for an already existing port.'
+      tag:
+        type: 'string'
+        description: 'The tag as a string.'
+      uuid:
+        type: 'string'
+        description: 'To provision the server instance with a NIC for a network.'
+  os:scheduler_hints:
+    type: object
+    properties:
+      dedicated_host_id:
+        type: 'string'
+        description: 'Specifies the Dedicated Host ID.'
+      different_host:
+        type: 'array'
+        description: 'A list of server uuids to be on different host.'
+        items:
+          type: 'string'
+      group:
+        type: 'string'
+        description: 'The UUID of the server group.'
+      numa_id:
+        type: 'string'
+        description: 'numa id that instance in.'
+      same_host:
+        type: 'string'
+        description: 'A list of server uuids to be on same host.'
+        items:
+          type: 'string'
+      specific_host:
+        type: 'string'
+        description: 'assign a host for instance.'
+      specific_host_tag:
+        type: 'string'
+        description: 'the tag of the specific host.'
+      tenancy:
+        type: 'string'
+        description: 'Launch a VM onto a Dedicated Host or the default shared host.'
+  personality:
+    type: object
+    required:
+    - 'contents'
+    - 'path'
+    properties:
+      contents:
+        type: 'string'
+        description: 'content of the injected file.'
+      path:
+        type: 'string'
+        description: 'path of the injected file.'
+  security_group:
+    type: object
+    required:
+    - 'description'
+    - 'id'
+    - 'name'
+    - 'rules'
+    - 'tenant_id'
+    properties:
+      description:
+        type: 'string'
+        description: 'The security group description.'
+      id:
+        type: 'string'
+        description: 'The security group name or UUID.'
+      name:
+        type: 'string'
+        description: 'The security group name.'
+      rules:
+        type: 'array'
+        description: 'A security group rules object.'
+        items:
+          type: 'string'
+      tenant_id:
+        type: 'string'
+        description: 'The UUID of the tenant.'
+  security_group_response:
+    type: object
+    required:
+    - 'name'
     properties:
       name:
-        type: string
-        description: "A name for the keypair which will be used to reference it later."
-      public_key:
-        type: string
-        description: "The keypair public key."
-      type:
-        type: string
-        description: "The type of the keypair. Allowed values are ssh or x509New in version 2.2"
-      user_id:
-        type: string
-        description: "The user_id of the keypair."
-      metadata:
-        type: object
-        title: Dict
-        description: "Metadata key and value pairs."
-        additionalProperties:
-          type: string
-      test_param:
-        type: string
-        description: "Test param."
-      test_param_array:
-        type: array
-        description: "Test param array."
-        items:
-          $ref: '#/definitions/array_info'
-      scheduler_hints:
-        type: object
-        description: "Scheduler hints."
-        properties:
-          same_host:
-            type: string
-            description: "Same host."
-          different_host:
-            type: string
-            description: "Different host."
-          test_param_array:
-            type: array
-            description: "Test param array."
-            items:
-              $ref: '#/definitions/array_info'
-  keypair(response):
+        type: 'string'
+        description: 'The security group name or UUID.'
+  volume:
     type: object
-    x-resource: Keypairs
+    required:
+    - 'id'
     properties:
-      fingerprint:
-        type: string
-        description: "The fingerprint for the keypair."
-      name:
-        type: string
-        description: "A name for the keypair which will be used to reference it later."
-      private_key:
-        type: string
-        description: "If you do not provide a public key on create, a new keypair will be built for you, and the private key will be returned during the initial create call."
-      public_key:
-        type: string
-        description: "The keypair public key."
-      type:
-        type: string
-        description: "The type of the keypair. Allowed values are ssh or x509New in version 2.2"
-      user_id:
-        type: string
-        description: "The user_id of the keypair."
-      metadata:
-        type: object
-        title: Dict
-        description: "Metadata key and value pairs."
-        additionalProperties:
-          type: string
-      test_array:
-        type: array
-        description: "array testing"
-        items:
-          $ref: '#/definitions/array_info'
-  keypair(update):
+      id:
+        type: 'string'
+        description: 'The UUID of the volume.'
+  link:
     type: object
-    x-resource: Keypairs
+    required:
+    - 'href'
+    - 'rel'
     properties:
-      name:
-        type: string
-        description: "A name for the keypair which will be used to reference it later."
-      public_key:
-        type: string
-        description: "The keypair public key."
-      type:
-        type: string
-        description: "The type of the keypair. Allowed values are ssh or x509New in version 2.2"
-      user_id_update:
-        type: string
-        description: "The user_id of the keypair."
-      metadata:
-        type: object
-        title: Dict
-        description: "Metadata key and value pairs."
-        additionalProperties:
-          type: string
-      test_param_array:
-        type: array
-        description: "Test param array."
-        items:
-          $ref: '#/definitions/array_info'
-  array_info:
+      href:
+        type: 'string'
+        description: 'The link to the resource.'
+      rel:
+        type: 'string'
+        description: 'A self link contains a versioned link to the resource.'
+  flavor:
     type: object
-    x-resource: Keypairs
+    required:
+    - 'id'
+    - 'links'
     properties:
-      array_a:
-        type: string
-        description: "array_a of test_array"
-      array_b:
-        type: string
-        description: "array_b of test_array"
+      id:
+        type: 'string'
+        description: 'The id of the flavor.'
+      links:
+        type: 'array'
+        description: 'Links to the resources in question.'
+        items:
+          $ref: '#/definitions/link'
+  fault:
+    type: object
+    required:
+    - 'code'
+    - 'created'
+    - 'message'
+    properties:
+      code:
+        type: 'integer'
+        format: 'int32'
+        description: 'The fault code.'
+      created:
+        type: 'string'
+        description: 'The date and time stamp format is ISO 8601.'
+      details:
+        type: 'string'
+        description: 'The details of the fault.'
+      message:
+        type: 'string'
+        description: 'The message of the fault.'
+  addresses:
+    type: object
+    properties:
+      private:
+        type: 'array'
+        description: 'The private addresses.'
+        items:
+          $ref: '#/definitions/network_info'
+      public:
+        type: 'array'
+        description: 'The public addresses.'
+        items:
+          $ref: '#/definitions/network_info'
+  network_info:
+    required:
+    - 'OS-EXT-IPS-MAC:mac_addr'
+    - 'OS-EXT-IPS:type'
+    - 'addr'
+    - 'version'
+    type: object
+    properties:
+      OS-EXT-IPS-MAC:mac_addr:
+        type: 'string'
+        description: 'The MAC address.'
+      OS-EXT-IPS-MAC:type:
+        type: 'string'
+        description: 'The type of ip addresses assignment.'
+      addr:
+        type: 'string'
+        description: 'The IP address.'
+      version:
+        type: 'integer'
+        format: 'int32'
+        description: 'The version of the IP address.'
