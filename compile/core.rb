@@ -94,6 +94,13 @@ class Compiler
     )
   end
 
+  def build_nested_array_property(props)
+    compile_template(
+      'templates/nested_array_property.erb',
+      props: props,
+    )
+  end
+
   def build_nested_nested_object_property(props)
     compile_template(
       'templates/nested_nested_property.erb',
