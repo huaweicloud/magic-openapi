@@ -1,9 +1,13 @@
 --- !ruby/object:Api::Product
-name: Compute(Nova)
-prefix: huawei_compute
-base_url: https://host.huawei.com/compute/v1/
+name: Huawei Cloud
+prefix: hcompute
+versions:
+  - !ruby/object:Api::Product::Version
+    name: v1
+    base_url: ""
+    default: true
 scopes:
-  - https://host.huawei.com/compute
+  - "http://scopte"
 objects:
 <% apis.each do |api| -%>
 <%= lines(build_object_resource(api)) -%>
