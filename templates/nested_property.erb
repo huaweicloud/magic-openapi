@@ -26,6 +26,9 @@
 <% end -%>
             name: '<%= key %>'
             description: '<%= value['description'] %>'
+<% if value.include? 'field' -%>
+	        field: '<%= value['field'] %>'
+<% end -%>
 <% if not value['additionalProperties'].nil? -%>
             key_type: <%= dict_type["string"] %>
 <% if not value['additionalProperties']['type'].nil? -%>

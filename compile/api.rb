@@ -52,7 +52,22 @@ class Api
     msg_prefix
   end
 
-  # This will overrides the originl properties.
+  def replace_properties(props, value, key)
+    value['properties'].each do |subkey, subvalue|
+      if subkey == 'replace_name' and not subvalue['title'].nil?
+        props[subvalue['title']] = props[key]
+        props[subvalue['title']]['field'] = key
+        props.delete(key)
+	  elsif subkey == 'replace_description' and not subvalue['title'].nil?
+        props[key]['description'] = subvalue['title']
+	  elsif not subvalue['properties'].nil?
+		props[key]['properties'] = replace_properties(props[key]['properties'], subvalue, subkey)
+      end
+	end
+	props
+  end
+
+  # This will overrides the original properties.
   def get_properties
     resp_body = @api['get'].response_body_schema(200)
     props = resp_body['properties']
@@ -61,25 +76,16 @@ class Api
       override = @api['override'].body_schema
       if not override.nil? and not override['properties'].nil?
         override['properties'].each do |key, value|
-          if props.include? key and not value['properties'].nil?
-            value['properties'].each do |subkey, subvalue|
-		      if subvalue['properties'].nil?
-                if subkey == 'name' and not subvalue['title'].nil?
-                  props[subvalue['title']] = props[key]
-	              props[subvalue['title']]['field'] = key
-	              props.delete(key)
-	            elsif subkey == 'description' and not subvalue['title'].nil?
-                  props[key][subkey] = subvalue['title']
-			    end
-			  else
-				subvalue['properties'].each do |subkey2, subvalue2|
-				  if subkey2 == 'name' and not subvalue2['title'].nil?
-					props[key]['properties'][subvalue2['title']] = props[key]['properties'][subkey]
-					props[key]['properties'][subvalue2['title']]['field'] = subkey
-					props[key]['properties'].delete(subkey)
-				  end
+          if props.include? key
+	        if not value['items'].nil?
+			  #TODO: Add more nested properties support, if needed?
+			  value['items']['properties'].each do |subkey, subvalue|
+                if props[key]['items']['properties'].include? subkey
+	              props[key]['items']['properties'] = replace_properties(props[key]['items']['properties'], subvalue, subkey)
 				end
 		      end
+			else
+			  props = replace_properties(props, value, key)
 	        end
 	      end
         end
@@ -109,7 +115,7 @@ class Api
     output
   end
 
-  # This will overrides the originl properties.
+  # This will overrides the original properties.
   def get_parameters
     req_body = @api['post'].body_schema
     resp_body = @api['get'].response_body_schema(200)
@@ -125,27 +131,17 @@ class Api
       override = @api['override'].body_schema
       if not override.nil? and not override['properties'].nil?
         override['properties'].each do |key, value|
-          if parameters.include? key and not value['properties'].nil?
-		    puts value['properties']
-            value['properties'].each do |subkey, subvalue|
-		      if subvalue['properties'].nil?
-                if subkey == 'name' and not subvalue['title'].nil?
-                  parameters[subvalue['title']] = parameters[key]
-	              parameters[subvalue['title']]['field'] = key
-	              parameters.delete(key)
-	            elsif subkey == 'description' and not subvalue['title'].nil?
-                  parameters[key][subkey] = subvalue['title']
-	            end
-			  else
-				subvalue['properties'].each do |subkey2, subvalue2|
-				  if subkey2 == 'name' and not subvalue2['title'].nil?
-					props[key]['properties'][subvalue2['title']] = props[key]['properties'][subkey]
-					props[key]['properties'][subvalue2['title']]['field'] = subkey
-					props[key]['properties'].delete(subkey)
-				  end
+          if parameters.include? key
+	        if not value['items'].nil?
+			  #TODO: Add more nested parameters support, if needed?
+			  value['items']['properties'].each do |subkey, subvalue|
+                if parameters[key]['items']['properties'].include? subkey
+	              parameters[key]['items']['properties'] = replace_properties(parameters[key]['items']['properties'], subvalue, subkey)
 				end
 		      end
-	        end
+			else
+			  parameters = replace_properties(parameters, value, key)
+			end
 	      end
         end
       end

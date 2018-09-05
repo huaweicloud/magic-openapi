@@ -20,22 +20,31 @@ definitions:
       adminPass:
         description: "Overrides adminPass to admin_pass."
         properties:
-          name:  # name should be the last property as it will override key of hash.
+          replace_name:  # name should be the last property as it will override key of hash.
             title: "admin_pass"
       description:
         description: "Overrides description to desc."
         properties:
-          name:  # name should be the last property as it will override key of hash.
+          replace_name:  # name should be the last property as it will override key of hash.
             title: "desc"
       updated:
         description: "Overrides updated to updated_time."
         properties:
-          name:  # name should be the last property as it will override key of hash.
+          replace_name:  # name should be the last property as it will override key of hash.
             title: "updated_time"
       networks:
         description: "Overrides networks.fixed_ip to networks.private_ip."
+        items:
+          properties:
+            fixed_ip:
+              properties:
+                replace_name:
+                  title: "private_ip"
+      os:scheduler_hints:
         properties:
-          fixed_ip:
+          dedicated_host_id:
             properties:
-            name:
-              title: "private_ip"
+              replace_name:
+                title: "dedicated_host"
+          replace_name:  # name should be the last property as it will override key of hash.
+            title: "scheduler_hints"
