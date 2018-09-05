@@ -17,15 +17,23 @@
     "object" => "!ruby/object:Api::Type::NestedObject",
   ]
 -%>
-	    properties:
+	        properties:
 <% props.each do |key, value| -%>
 <% if not value['additionalProperties'].nil? -%>
               - !ruby/object:Api::Type::NameValues
+<% elsif not value['enum'].nil? -%>
+              - !ruby/object:Api::Type::Enum
 <% else -%>
               <%= data_type[value['type']] %>
 <% end -%>
                 name: '<%= key %>'
                 description: '<%= value['description'] %>'
+<% if not value['enum'].nil? -%>
+	            values:
+<% value['enum'].each do |enum_value| -%>
+                  - :<%= enum_value %>
+<% end -%>
+<% end -%>
 <% if not value['additionalProperties'].nil? -%>
                 key_type: <%= dict_type["string"] %>
 <% if not value['additionalProperties']['type'].nil? -%>

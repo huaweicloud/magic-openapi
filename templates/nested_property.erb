@@ -21,6 +21,8 @@
 <% props.each do |key, value| -%>
 <% if not value['additionalProperties'].nil? -%>
           - !ruby/object:Api::Type::NameValues
+<% elsif not value['enum'].nil? -%>
+          - !ruby/object:Api::Type::Enum
 <% else -%>
           <%= data_type[value['type']] %>
 <% end -%>
@@ -28,6 +30,12 @@
             description: '<%= value['description'] %>'
 <% if value.include? 'field' -%>
 	        field: '<%= value['field'] %>'
+<% end -%>
+<% if not value['enum'].nil? -%>
+	        values:
+<% value['enum'].each do |enum_value| -%>
+              - :<%= enum_value %>
+<% end -%>
 <% end -%>
 <% if not value['additionalProperties'].nil? -%>
             key_type: <%= dict_type["string"] %>
