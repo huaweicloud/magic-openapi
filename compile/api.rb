@@ -21,7 +21,7 @@ class Api
   end
 
   def get_resource_name
-    req_body = @api['post'].body_schema
+    req_body = @api['create'].body_schema
     if req_body.include? 'x-resource'
       req_body['x-resource']
     else
@@ -30,7 +30,7 @@ class Api
   end
 
   def get_description
-    raw = @api['post'].raw
+    raw = @api['create'].raw
     if raw.include? 'description'
       raw['description']
     else
@@ -38,18 +38,25 @@ class Api
     end
   end
 
+  def get_api_msg_prefix(api)
+    resp_body = api.response_body_schema(200)
+	if resp_body['required'].nil?
+	  return ''
+	end
+	resp_body['required'].at(0)
+  end
+
   def get_msg_prefix
-    raw = @api['post'].raw
-    if raw['parameters'].nil?
-      return ''
-    end
-    msg_prefix = ''
-    raw['parameters'].each do |param|
-      if not param['in'].nil? and param['in'] == 'body'
-        msg_prefix = param['name']
-      end
-    end
-    msg_prefix
+	output = []
+	apis = ['create', 'get', 'update']
+	apis.each do |api|
+      msg_prefix = get_api_msg_prefix(@api[api])
+	  if not msg_prefix.empty?
+		msg_prefix = api + ": '" + msg_prefix + "'"
+	    output.push(msg_prefix)
+	  end
+	end
+    output
   end
 
   def replace_properties(props, value, key)
@@ -70,7 +77,8 @@ class Api
   # This will overrides the original properties.
   def get_properties
     resp_body = @api['get'].response_body_schema(200)
-    props = resp_body['properties']
+	key = resp_body['required'].at(0)
+    props = resp_body['properties'][key]['properties']
     # get overrides
 	if not @api['override'].nil?
       override = @api['override'].body_schema
@@ -95,7 +103,7 @@ class Api
   end
 
   def get_required
-    req_body = @api['post'].body_schema
+    req_body = @api['create'].body_schema
     if req_body.include? 'required'
       req_body['required']
     else
@@ -104,10 +112,11 @@ class Api
   end
 
   def get_output
-    req_body = @api['post'].body_schema
+    req_body = @api['create'].body_schema
     resp_body = @api['get'].response_body_schema(200)
+	key = resp_body['required'].at(0)
     output = []
-    resp_body['properties'].each do |key, value|
+    resp_body['properties'][key]['properties'].each do |key, value|
       if not req_body['properties'].include?(key)
         output.push(key)
       end
@@ -117,11 +126,13 @@ class Api
 
   # This will overrides the original properties.
   def get_parameters
-    req_body = @api['post'].body_schema
+    req_body = @api['create'].body_schema
     resp_body = @api['get'].response_body_schema(200)
+	k = resp_body['required'].at(0)
+    props = resp_body['properties'][k]['properties']
     parameters = Hash.new
     req_body['properties'].each do |key, value|
-      if not resp_body['properties'].include?(key)
+      if not props.include?(key)
         parameters[key] = value
       end
     end
@@ -150,13 +161,13 @@ class Api
   end
 
   def get_create_update
-    create_body = @api['post'].body_schema
+    create_body = @api['create'].body_schema
     create_update = Hash.new
     create_body['properties'].each do |key, value|
-      if @api['put'].nil?
+      if @api['update'].nil?
         create_update[key] = 'c'
       else
-	update_body = @api['put'].body_schema
+	update_body = @api['update'].body_schema
         if not update_body['properties'].include?(key)
           create_update[key] = 'c'
         else
@@ -164,8 +175,8 @@ class Api
         end
       end
     end
-    if not @api['put'].nil?
-      update_body = @api['put'].body_schema
+    if not @api['update'].nil?
+      update_body = @api['update'].body_schema
       update_body['properties'].each do |key, value|
         if not create_body['properties'].include?(key)
           create_update[key] = 'u'

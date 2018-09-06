@@ -33,7 +33,12 @@ paths:
         '200':
           description: 'A server object'
           schema:
-            $ref: '#/definitions/server(response)'
+            type: 'object'
+            required:
+            - 'keypair'
+            properties:
+              keypair:
+                $ref: '#/definitions/server(response)'
         '202':
           description: 'Accepted'
         '400':
@@ -96,7 +101,12 @@ paths:
         '200':
           description: 'A server object.'
           schema:
-            $ref: '#/definitions/server(response)'
+            type: 'object'
+            required:
+            - 'keypair'
+            properties:
+              keypair:
+                $ref: '#/definitions/server(response)'
         "400":
           description: 'badRequest'
         "401":
@@ -132,7 +142,12 @@ paths:
         '200':
           description: 'A server object.'
           schema:
-            $ref: '#/definitions/server(response)'
+            type: 'object'
+            required:
+            - 'keypair'
+            properties:
+              keypair:
+                $ref: '#/definitions/server(response)'
         "400":
           description: 'badRequest'
         "401":

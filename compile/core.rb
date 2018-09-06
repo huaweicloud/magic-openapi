@@ -27,15 +27,15 @@ class Compiler
     apis = []
     @uris.each do |uri|
       api = Hash.new
-      api['post'] = @openapi.endpoint(uri, 'post')
+      api['create'] = @openapi.endpoint(uri, 'post')
       api['get'] = @openapi.endpoint(uri+'/1', 'get')
-      api['put'] = @openapi.endpoint(uri+'/1', 'put')
+      api['update'] = @openapi.endpoint(uri+'/1', 'put')
 	  if not @overrides.nil?
         api['override'] = @overrides.endpoint(uri, 'post')
 	  else
 		api['override'] = nil
       end
-      if not api['post'].nil? and not api['get'].nil?
+      if not api['create'].nil? and not api['get'].nil?
         apis.push(Api.new(api, uri))
       end
     end
