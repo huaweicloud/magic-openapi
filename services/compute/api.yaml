@@ -11,6 +11,37 @@ produces:
   - application/json
 paths:
   /servers:
+    get:
+      tags:
+        - Servers
+      description: 'Get server list.'
+      parameters:
+        - name: 'limit'
+          in: 'query'
+          description: 'The limit of returned servers'
+          required: false
+          type: 'integer'
+          format: 'int32'
+        - name: 'marker'
+          in: 'query'
+          description: 'The marker from which to return servers'
+          required: false
+          type: 'string'
+        - name: 'name'
+          in: 'query'
+          description: 'The name of the server'
+          required: false
+          type: 'string'
+      responses:
+        '200':
+          description: 'A server list object'
+          schema:
+            type: 'object'
+            required:
+            - 'servers'
+            properties:
+              servers:
+                $ref: '#/definitions/servers_simple'
     post:
       tags:
         - Servers
@@ -35,9 +66,9 @@ paths:
           schema:
             type: 'object'
             required:
-            - 'keypair'
+            - 'server'
             properties:
-              keypair:
+              server:
                 $ref: '#/definitions/server(response)'
         '202':
           description: 'Accepted'
@@ -103,9 +134,9 @@ paths:
           schema:
             type: 'object'
             required:
-            - 'keypair'
+            - 'server'
             properties:
-              keypair:
+              server:
                 $ref: '#/definitions/server(response)'
         "400":
           description: 'badRequest'
@@ -144,9 +175,9 @@ paths:
           schema:
             type: 'object'
             required:
-            - 'keypair'
+            - 'server'
             properties:
-              keypair:
+              server:
                 $ref: '#/definitions/server(response)'
         "400":
           description: 'badRequest'
@@ -631,3 +662,40 @@ definitions:
         type: 'integer'
         format: 'int32'
         description: 'The version of the IP address.'
+  servers_simple:
+    type: object
+    description: 'The simple server list.'
+    additionalProperties:
+      type: 'array'
+      items:
+        $ref: '#/definitions/server_simple'
+  server_simple:
+    required:
+    - 'id'
+    - 'links'
+    - 'name'
+    type: object
+    properties:
+      id:
+        type: 'string'
+        description: 'The UUID of the server.'
+      links:
+        type: 'array'
+        description: 'The links of the server.'
+        items:
+          $ref: '#/definitions/link_getserver'
+      name:
+        type: 'string'
+        description: 'The name of the server.'
+  link_getserver:
+    required:
+    - 'href'
+    - 'rel'
+    type: object
+    properties:
+      href:
+        type: 'string'
+        description: 'The href of the link.'
+      rel:
+        type: 'string'
+        description: 'The rel of the link.'

@@ -28,6 +28,7 @@ class Compiler
     @uris.each do |uri|
       api = Hash.new
       api['create'] = @openapi.endpoint(uri, 'post')
+      api['list'] = @openapi.endpoint(uri, 'get')
       api['get'] = @openapi.endpoint(uri+'/1', 'get')
       api['update'] = @openapi.endpoint(uri+'/1', 'put')
 	  if not @overrides.nil?

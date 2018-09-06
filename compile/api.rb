@@ -38,7 +38,10 @@ class Api
     end
   end
 
-  def get_api_msg_prefix(api)
+  def _get_api_msg_prefix(api)
+	if api.nil?
+	  return ''
+	end
     resp_body = api.response_body_schema(200)
 	if resp_body['required'].nil?
 	  return ''
@@ -48,9 +51,9 @@ class Api
 
   def get_msg_prefix
 	output = []
-	apis = ['create', 'get', 'update']
+	apis = ['create', 'update', 'get', 'list']
 	apis.each do |api|
-      msg_prefix = get_api_msg_prefix(@api[api])
+      msg_prefix = _get_api_msg_prefix(@api[api])
 	  if not msg_prefix.empty?
 		msg_prefix = api + ": '" + msg_prefix + "'"
 	    output.push(msg_prefix)
@@ -59,7 +62,7 @@ class Api
     output
   end
 
-  def replace_properties(props, value, key)
+  def _replace_properties(props, value, key)
     value['properties'].each do |subkey, subvalue|
       if subkey == 'replace_name' and not subvalue['title'].nil?
         props[subvalue['title']] = props[key]
@@ -68,7 +71,7 @@ class Api
 	  elsif subkey == 'replace_description' and not subvalue['title'].nil?
         props[key]['description'] = subvalue['title']
 	  elsif not subvalue['properties'].nil?
-		props[key]['properties'] = replace_properties(props[key]['properties'], subvalue, subkey)
+		props[key]['properties'] = _replace_properties(props[key]['properties'], subvalue, subkey)
       end
 	end
 	props
@@ -89,11 +92,11 @@ class Api
 			  #TODO: Add more nested properties support, if needed?
 			  value['items']['properties'].each do |subkey, subvalue|
                 if props[key]['items']['properties'].include? subkey
-	              props[key]['items']['properties'] = replace_properties(props[key]['items']['properties'], subvalue, subkey)
+	              props[key]['items']['properties'] = _replace_properties(props[key]['items']['properties'], subvalue, subkey)
 				end
 		      end
 			else
-			  props = replace_properties(props, value, key)
+			  props = _replace_properties(props, value, key)
 	        end
 	      end
         end
@@ -147,11 +150,11 @@ class Api
 			  #TODO: Add more nested parameters support, if needed?
 			  value['items']['properties'].each do |subkey, subvalue|
                 if parameters[key]['items']['properties'].include? subkey
-	              parameters[key]['items']['properties'] = replace_properties(parameters[key]['items']['properties'], subvalue, subkey)
+	              parameters[key]['items']['properties'] = _replace_properties(parameters[key]['items']['properties'], subvalue, subkey)
 				end
 		      end
 			else
-			  parameters = replace_properties(parameters, value, key)
+			  parameters = _replace_properties(parameters, value, key)
 			end
 	      end
         end
@@ -167,7 +170,7 @@ class Api
       if @api['update'].nil?
         create_update[key] = 'c'
       else
-	update_body = @api['update'].body_schema
+	    update_body = @api['update'].body_schema
         if not update_body['properties'].include?(key)
           create_update[key] = 'c'
         else
