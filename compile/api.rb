@@ -95,11 +95,15 @@ class Api
 	props
   end
 
-  # This will overrides the original properties.
-  def get_properties
-    resp_body = @api['get'].response_body_schema(200)
+  def _get_response_properties(api)
+    resp_body = @api[api].response_body_schema(200)
 	key = resp_body['required'].at(0)
     props = resp_body['properties'][key]['properties']
+  end
+
+  # This will overrides the original properties.
+  def get_properties
+    props = _get_response_properties('get')
     # get overrides
 	if not @api['override'].nil?
       override = @api['override'].body_schema
@@ -120,11 +124,10 @@ class Api
   end
 
   def get_output
-    req_body = @api['create'].body_schema
-    resp_body = @api['get'].response_body_schema(200)
-	key = resp_body['required'].at(0)
     output = []
-    resp_body['properties'][key]['properties'].each do |key, value|
+    req_body = @api['create'].body_schema
+    props = _get_response_properties('get')
+    props.each do |key, value|
       if not req_body['properties'].include?(key)
         output.push(key)
       end
@@ -132,14 +135,25 @@ class Api
     output
   end
 
+  def _combine_properties(api1, api2)
+    body1 = @api[api1].body_schema
+    body2 = @api[api2].body_schema
+	p1 = body1['properties']
+	p2 = body2['properties']
+	p2.each do |key, value|
+	  if not p1.include?(key)
+		p1[key] = value
+	  end
+	end
+	p1
+  end
+
   # This will overrides the original properties.
   def get_parameters
-    req_body = @api['create'].body_schema
-    resp_body = @api['get'].response_body_schema(200)
-	k = resp_body['required'].at(0)
-    props = resp_body['properties'][k]['properties']
+	req_props =_combine_properties('create', 'update')
+    props = _get_response_properties('get')
     parameters = Hash.new
-    req_body['properties'].each do |key, value|
+    req_props.each do |key, value|
       if not props.include?(key)
         parameters[key] = value
       end
